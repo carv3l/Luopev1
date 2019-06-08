@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Luope - Student interface</title>
+    <style>
+        table, th, td {
+  border: 1px solid black;
+}
+        </style>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+    <link rel="stylesheet" href="components/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="components/sweetalert/dist/sweetalert.css">
+    <link href="componentsd/jquery-ui-custom/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="components/jquery-ui-custom/jquery-ui.theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="mdl-vendr mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header id="user-data" class="mdl-layout__header mdl-color--primary mdl-layout--fixed-drawer">
+<!--        <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>-->
+        <div class="mdl-layout__header-row" style="padding-top:40px">
+            <img src="vendr.png" alt="vendr"/>
+<!--            <h3>Instituto Politécnico da Guarda</h3>-->
+        </div>
+        <!--AQUI APARECE O NOME E O BALANÇO DA CONTA-->
+        <div class="mdl-layout__header-row">
+            <h5>{{name}} - € {{balance}}</h5>
+        </div>
+<!--        <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>-->
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+            <a href="#reservations" class="mdl-layout__tab">Reservas</a>
+            <a href="#meals" class="mdl-layout__tab is-active">Refeições</a>
+            <a href="#operations" class="mdl-layout__tab">Movimentos</a>
+            <a href="#account-settings" class="mdl-layout__tab">A sua conta</a>
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="logout" v-on:click=" logout()">
+                <i class="material-icons" role="presentation">power_settings_new</i>
+                <span class="visuallyhidden">Logout</span>
+            </button>
+            <div class="mdl-tooltip" for="logout">
+                Logout
+            </div>
+        </div>
+    </header>
+    <main class="mdl-layout__content">
+        <!--COMPRA DAS REFEICOES                    ID= meals-->
+        <div class="mdl-layout__tab-panel is-active" id="meals">
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white">
+                    <i class="material-icons">store_mall_directory</i>
+                </header>
+                <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                    <div class="mdl-card__supporting-text">
+                        <h4>Cantinas</h4>
+                        <div id="canteen-list" class="button-list">
+                            <!--LISTA DAS CANTINAS -->
+                            <button v-for="canteen in canteens" class="mdl-button mdl-js-button mdl-js-ripple-effect canteen.selected ? 'selected' : ''"  v-on:click=" select(canteen)" data-id="canteen.canteen_id">
+                                {{canteen.description}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <div class="mdl-card mdl-cell mdl-cell--12-col">
+                    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" id="">
+                        <h3 class="mdl-cell mdl-cell--12-col"> <i class="material-icons">restaurant_menu</i> Ementa <span id="selected-canteen"></span></h3>
+
+                        <div class=" mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone" v-for="bd in dates">
+                            <!--DIA DA REFEICAO-->
+                            
+                            <h4>{{bd.moment_date}}</h4>
+                        
+                            <!-- PRECO, DESCRICAO TIPO -->
+                                <dl v-for="e in bd.list" class="typo-styles">
+                                    <dt>€ {{e.price}}
+                                        <button class="mdl-button mdl-button--colored {{e.reserved ? 'hidden' : ''}}" v-on:click=" reserve(e)" style="float:right">reservar</button>
+                                        <button class="mdl-button mdl-button--colored {{e.reserved ? '' : 'hidden'}}" style="float:right" disabled>reservado</button>
+                                    </dt>
+                                    
+                                    <dd><h5>{{e.description}}</h5>
+                                        {{e.category_description}} <span style="color:#FF5252">{{e.take_away ? '- Take-Away' : ''}}</span>
+                                        <!--{{e.moment_date}}-->                                
+                                                                       
+                                   
+                                        <br />
+                                    </dd>
+                                </dl>
+                            
+
+
+                            <!--<h4>[{{e.category_description}}] {{e.description}} - € {{e.price}}</h4>-->
+                            <!--{{e.moment_date}} - {{e.canteen}}.-->
+                            <!--<button class="mdl-button {{e.reserved ? 'hidden' : ''}}" v-on:click=" reserve(e)">reservar</button>-->
+                        </div>
+                    
+               
+                    </div>
+            </div>
+            </section>
+            <br />
+        </div>
+        <!--MOVIMENTOS DO CARTAO ID = operations -->
+        <div class="mdl-layout__tab-panel" id="operations">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-cell mdl-cell--12-col">
+                    <h4>Lista de Movimentos de Cartão</h4>
+                    <table id="operations-list" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                        <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Descrição</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="op in operations"
+                            v-bind:style="{ 'background-color: #E8E8E8;' : op.negative_operation }"
+                        >
+                            <td class="mdl-data-table__cell--non-numeric">{{op.description}}</td>
+                            <td>{{op.mov_value}} €</td>
+                            <td>{{op.mov_date}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>
+            </section>
+        </div>
+        <!--RESERVAS EFETUADAS  id= reservations-->
+        <div class="mdl-layout__tab-panel" id="reservations">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-cell mdl-cell--12-col">
+
+                    
+                    <h4>Lista de Reservas Efectuadas</h4>
+                    <table id="reservations-list" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                        <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Descrição</th>
+                            <th>Valor</th>
+                            <th>Comprado em:</th>
+                            <th>Dia da Refeição</th>
+                            <th>Operações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="r in reservations" v-bind:style="{ 'background-color:#eee' : r.cancelled }">
+                            <td class="mdl-data-table__cell--non-numeric">{{r.ement_description}}</td>
+                            <td>{{r.price}} €</td>
+                            <td>{{r.moment_reservation_date}}</td>
+                            <td>{{r.moment_date}}</td>
+                            <td>
+                                <a class="{{r.cancelled ? 'hidden' : ''}}" v-on:click=" unreserve(r)">cancelar reserva</a>
+                                <a class="{{r.cancelled ? '' : 'hidden'}}">reserva cancelada</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>
+            </section>
+        </div>
+        <!--DADOS PESSOAIS-->
+        <div class="mdl-layout__tab-panel" id="account-settings">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-cell mdl-cell--12-col">
+                    <h4>Os seus dados pessoais</h4>
+                    <table class="f-table">
+                        <tr>
+                            <td>Nome: </td>
+                            <td>{{name}}</td>
+                        </tr>
+                        <tr>
+                            <td>Endereço: </td>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield is-upgraded is-dirty" data-upgraded=",MaterialTextfield">
+                                    <input class="mdl-textfield__input" type="text" id="addr-user" v-model="address">
+                                    <label class="mdl-textfield__label" for="addr-user">Endereço</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Código Postal: </td>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield is-upgraded is-dirty" data-upgraded=",MaterialTextfield">
+                                    <input class="mdl-textfield__input" type="text" id="zip_code-user" v-model="zip_code">
+                                    <label class="mdl-textfield__label" for="zip_code-user">Código Postal</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Localidade: </td>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield is-upgraded is-dirty" data-upgraded=",MaterialTextfield">
+                                    <input class="mdl-textfield__input" type="text" id="city-user" v-model="city">
+                                    <label class="mdl-textfield__label" for="addr-user">Localidade</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>NIF: </td>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield is-upgraded is-dirty" data-upgraded=",MaterialTextfield">
+                                    <input class="mdl-textfield__input" type="text" id="vat-user" v-model="vat">
+                                    <label class="mdl-textfield__label" for="vat-user">Num. Identificação Fiscal</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Telemóvel: </td>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield is-upgraded is-dirty" data-upgraded=",MaterialTextfield">
+                                    <input class="mdl-textfield__input" type="text" id="phone-user" v-model="phone">
+                                    <label class="mdl-textfield__label" for="phone-user">Num. Identificação Fiscal</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PIN: </td>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="pin-user" pattern="-?[0-9]*(\.[0-9]+)?" >
+                                    <label class="mdl-textfield__label" for="pin-user">Escreva para mudar</label>
+                                    <span class="mdl-textfield__error">Só são aceites números</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Password: </td>
+                            <td>{{password}}
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="pw-user">
+                                    <label class="mdl-textfield__label" for="pw-user">Escreva para mudar</label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><!-- Raised button with ripple -->
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" @click="sendUpdate()">Guardar</button>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <br/>
+                </div>
+            </section>
+        </div>
+
+    </main>
+</div>
+<script type="application/javascript" src="components/material-design-lite/material.min.js"></script>
+    <script type="application/javascript" src="components/jquery/dist/jquery.min.js"></script>
+    <script type="application/javascript">
+        if (window.jQuery === undefined && typeof(require) == "function") {
+            window.$ = window.jQuery = require('./components/jquery/dist/jquery.min.js');
+            
+
+        }
+    </script>
+    <script type="application/javascript" src="componentsd/vue/dist/vue.js"></script>
+    
+    <script type="application/javascript" src="components/jquery-ui-custom/jquery-ui.min.js"></script>
+    <script type="application/javascript" src="components/jquery-keyboard/docs/js/jquery-migrate-1.2.1.min.js"></script>
+    <script type="application/javascript" src="components/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="application/javascript" src="components/jquery-keyboard/js/jquery.keyboard.js"></script>
+    <script type="application/javascript" src="components/moment/min/moment-with-locales.min.js"></script>
+    <script type="application/javascript" src="components/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+    <script type="application/javascript">
+        if (window.io === undefined && typeof(require) == "function") {
+            window.io = require('./components/socket.io/socket.io.js');
+        }
+    </script>
+    <script type="application/javascript" src="js/dashboard.js"></script>
+</body>
+</html>

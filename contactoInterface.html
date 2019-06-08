@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Luope student login</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+    <link rel="stylesheet" href="components/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="components/sweetalert/dist/sweetalert.css">
+    <!-- jquery keyboard -->
+    <link href="components/jquery-ui-custom/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="components/jquery-ui-custom/jquery-ui.theme.min.css" rel="stylesheet">
+    <link href="components/jquery-keyboard/css/keyboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-screen">
+    <!--<header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">-->
+        <!--<div class="mdl-layout__header-row"><span style="padding-left:10px" class="mdl-layout-title">IPG</span>-->
+            <!--<div class="mdl-layout-spacer"></div>-->
+        <!--</div>-->
+    <!--</header>-->
+    <main class="mdl-layout__content mdl-grid login-main-grid">
+        <div class="one-container mdl-grid">
+            <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+            <div class="one-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+                <div class="vendr-logo"> </div>
+                <div id="login-form">
+                    <div class="demo-crumbs mdl-color-text--grey-500">Login</div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="username" type="text" v-model="username" class="mdl-textfield__input">
+                        <label class="mdl-textfield__label" for="username">username</label>
+                    </div><br>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="password" type="password" v-model="password" class="mdl-textfield__input" @keyup.enter="submitAuth(username, password) | key 'enter'">
+                        <label class="mdl-textfield__label" for="password">password</label>
+                    </div>
+                    <buton @click="submitAuth(username, password)" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" style="display: block;"> <i class="material-icons">keyboard_arrow_right</i></buton>
+                </div>
+                <div id="card-intro" style="display: none;">
+                    <h4><i class="material-icons">credit_card</i> Passe o cartão no leitor</h4>
+                </div>
+                <div id="user-info" style="display:none">
+                    <span>Bem-Vindo</span>
+                    <h3>{{name}}</h3>
+
+                </div>
+
+                <div id="pin-request" class="container" style="display: none;">
+                    <div class="row">
+                        <h4>Insira o seu pin:</h4>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input id="pin-input" class="mdl-textfield__input" value="" maxlength="4" type="password" />
+                            <label class="mdl-textfield__label" for="pin-input">pin</label>
+                        </div>
+                        <button id="try-pin" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" style="display:none;">OK</button>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </main>
+    <div id="virtualKeyboard"></div>
+    <script type="application/javascript" src="components/vue/dist/vue.min.js"></script>
+    <script type="application/javascript" src="components/material-design-lite/material.min.js"></script>
+    <script type="application/javascript" src="components/jquery/dist/jquery.min.js"></script>
+    <script type="application/javascript">
+        if (window.jQuery === undefined  && typeof(require) == "function") {
+            window.$ = window.jQuery = require('./components/jquery/dist/jquery.min.js');
+        }
+    </script>
+    <script type="application/javascript" src="components/jquery-ui-custom/jquery-ui.min.js"></script>
+    <script type="application/javascript" src="components/jquery-keyboard/docs/js/jquery-migrate-1.2.1.min.js"></script>
+    <script type="application/javascript" src="components/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="application/javascript" src="components/jquery-keyboard/js/jquery.keyboard.js"></script>
+    <script type="application/javascript" src="components/socket.io/socket.io.js"></script>
+    <script type="application/javascript">
+        if (window.io === undefined && typeof(require) == "function") {
+            window.io = require('./components/socket.io/socket.io.js');
+        }
+    </script>
+    <script type="application/javascript" src="js/login.js"></script>
+</body>
+</html>

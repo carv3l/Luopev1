@@ -1,0 +1,9 @@
+"id":"6004",
+"name":"Dário Coelho Ribeiro",
+"email":"1012208@sal.ipg.pt",
+"address":"",
+"zip_code":"",
+"locality":"",
+"balance":3.85,
+"vat":222972998,
+"token":"bc496c9e06ee3808dc81b80e59b97b62706590229249aa199987bfa7f30427cc"}
